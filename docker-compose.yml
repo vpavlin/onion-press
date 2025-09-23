@@ -6,6 +6,7 @@ services:
     image: torservers/onionize
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
+      - onion_services:/var/lib/tor/onion_services:z
     restart: unless-stopped
 
   wordpress:
@@ -35,3 +36,4 @@ services:
 
 volumes:
   db_data:
+  onion_services:
