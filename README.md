@@ -1,6 +1,10 @@
 # onion-press
 A simple Docker Compose to run Wordpress as an Onion Service
 
+# Prerequisities
+
+You will need [Docker](https://docs.docker.com/get-started/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/) installed
+
 # Start
 
 Start the Docker Compose as you are used to (via desktop or CLI)
