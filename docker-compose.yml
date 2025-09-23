@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  onionize:
+    container_name: onionize
+    image: torservers/onionize
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    restart: unless-stopped
+
+  wordpress:
+    image: wordpress:latest
+    environment:
+      - ONIONSERVICE_NAME=wordpress
+      - WORDPRESS_DB_HOST=db
+      - WORDPRESS_DB_USER=wordpress
+      - WORDPRESS_DB_PASSWORD=wordpress
+      - WORDPRESS_DB_NAME=wordpress
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    depends_on:
+      - db
+
+  db:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=wordpress
+      - MYSQL_USER=wordpress
+      - MYSQL_PASSWORD=wordpress
+    restart: unless-stopped
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
