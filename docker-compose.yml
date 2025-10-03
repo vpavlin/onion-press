@@ -9,6 +9,17 @@ services:
       - onion_services:/var/lib/tor/onion_services:z
     restart: unless-stopped
 
+  db:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=wordpress
+      - MYSQL_USER=wordpress
+      - MYSQL_PASSWORD=wordpress
+    restart: unless-stopped
+    volumes:
+      - db_data:/var/lib/mysql
+
   wordpress:
     image: wordpress:latest
     environment:
@@ -22,18 +33,25 @@ services:
     restart: unless-stopped
     depends_on:
       - db
+      - onionize
 
-  db:
-    image: mysql:5.7
+  ghost:
+    image: ghost:latest
     environment:
-      - MYSQL_ROOT_PASSWORD=rootpassword
-      - MYSQL_DATABASE=wordpress
-      - MYSQL_USER=wordpress
-      - MYSQL_PASSWORD=wordpress
+      - ONIONSERVICE_NAME=ghost
+      - NODE_ENV=development
+      - url=http://0.0.0.0:80
+      - server__host=0.0.0.0
+      - server__port=80
+    ports:
+      - "8080:80"
     restart: unless-stopped
+    depends_on:
+      - onionize
     volumes:
-      - db_data:/var/lib/mysql
+      - ghost_data:/var/lib/ghost
 
 volumes:
   db_data:
   onion_services:
+  ghost_data:
